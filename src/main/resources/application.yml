@@ -1,7 +1,6 @@
 spring:
-  cloud:
-    stream:
-      bindings:
-        input:
-          destination: dvivasva-stream
+  appication:
+    name: account-kr
+server:
+  port: 8093
 

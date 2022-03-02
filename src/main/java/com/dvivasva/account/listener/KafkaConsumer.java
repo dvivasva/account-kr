@@ -47,12 +47,14 @@ public class KafkaConsumer {
     public void consumeFindAccountOrigin(String param) {
         logger.info("Has been published ACCOUNT number from service card-kr : " + param);
         //return Account
+        responseMessageAccount(param,0);
 
     }
     @KafkaListener(topics = Topic.FIND_ACCOUNT_DESTINATION, groupId = "group_id")
     public void consumeFindAccountDestination(String param) {
         logger.info("Has been published ACCOUNT number from service card-kr : " + param);
         //return Account
+        responseMessageAccount(param,1);
 
     }
 
@@ -71,4 +73,16 @@ public class KafkaConsumer {
         }).subscribe();
     }
 
+
+    @KafkaListener(topics = Topic.UPD_ACCOUNT_ORIGIN, groupId = "group_id")
+    public void consumeUpdOrigin(String param) {
+        logger.info("Has been published ACCOUNT number from service payment-kr : " + param);
+
+
+    }
+    @KafkaListener(topics = Topic.UPD_ACCOUNT_DESTINATION, groupId = "group_id")
+    public void consumeUpdDestination(String param) {
+        logger.info("Has been published ACCOUNT number from service payment-kr : " + param);
+
+    }
 }

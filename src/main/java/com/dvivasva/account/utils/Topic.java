@@ -6,4 +6,6 @@ public interface Topic {
         String FIND_ACCOUNT_DESTINATION="find-account-destination";
         String RESPONSE_ACCOUNT_ORIGIN="response-account-origin";
         String RESPONSE_ACCOUNT_DESTINATION="response-account-destination";
+        String UPD_ACCOUNT_ORIGIN="upd-account-origin";
+        String UPD_ACCOUNT_DESTINATION="upd-account-destination";
 }

@@ -1,7 +1,7 @@
 package com.dvivasva.account.listener;
 
-import com.dvivasva.account.component.AccountComponent;
-import com.dvivasva.account.model.Account;
+import com.dvivasva.account.dto.AccountDto;
+import com.dvivasva.account.service.AccountService;
 import com.dvivasva.account.service.KafkaProducer;
 import com.dvivasva.account.utils.JsonUtils;
 import com.dvivasva.account.utils.Topic;
@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 
@@ -18,7 +19,7 @@ import java.io.IOException;
 public class KafkaConsumer {
 
     private static final Logger logger = LoggerFactory.getLogger(KafkaConsumer.class);
-    private final AccountComponent accountComponent;
+    private final AccountService accountService;
     private final KafkaProducer kafkaProducer;
 
     @KafkaListener(topics = Topic.INS_ACCOUNT, groupId = "group_id")
@@ -28,11 +29,11 @@ public class KafkaConsumer {
     }
     public void createAccount(String param) {
 
-        var account = new Account();
+        var accountDto = new AccountDto();
         try {
-            account = JsonUtils.convertFromJsonToObject(param, Account.class);
+            accountDto = JsonUtils.convertFromJsonToObject(param, AccountDto.class);
 
-            var ins = accountComponent.create(account);
+            var ins = accountService.create(Mono.just(accountDto));
             ins.doOnNext(p -> logger.info("registry success" + p))
                     .subscribe();
 
@@ -57,7 +58,7 @@ public class KafkaConsumer {
 
     public void responseMessageAccount(String param, int index) {
         String newNumberAccount = JsonUtils.removeFirstAndLast(param);
-        var find = accountComponent.findByNumberAccount(newNumberAccount);
+        var find = accountService.findByNumberCard(newNumberAccount);
         find.doOnNext(p -> {
 
             if (index == 0) {

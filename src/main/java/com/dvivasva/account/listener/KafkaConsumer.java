@@ -48,19 +48,22 @@ public class KafkaConsumer {
         logger.info("Has been published ACCOUNT number from service card-kr : " + param);
         //return Account
         responseMessageAccount(param,0);
+        logger.info("send details account origin to payment -->");
 
     }
     @KafkaListener(topics = Topic.FIND_ACCOUNT_DESTINATION, groupId = "group_id")
     public void consumeFindAccountDestination(String param) {
         logger.info("Has been published ACCOUNT number from service card-kr : " + param);
-        //return Account
-        responseMessageAccount(param,1);
+
+       responseMessageAccount(param,1);
+        logger.info("send details account destination to payment -->");
 
     }
 
     public void responseMessageAccount(String param, int index) {
         String newNumberAccount = JsonUtils.removeFirstAndLast(param);
-        var find = accountService.findByNumberCard(newNumberAccount);
+
+        var find = accountService.findByNumberAccount(newNumberAccount);
         find.doOnNext(p -> {
 
             if (index == 0) {
@@ -69,7 +72,7 @@ public class KafkaConsumer {
             } else {
                 kafkaProducer.responseAccountDestination(p);
             }
-            logger.info("send messages to account -->");
+
         }).subscribe();
     }
 

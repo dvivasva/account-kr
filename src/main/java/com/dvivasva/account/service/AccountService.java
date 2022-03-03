@@ -32,8 +32,8 @@ public class AccountService {
         return iAccountRepository.findAll().map(AccountUtil::entityToDto);
     }
 
-    public Mono<AccountDto> findByNumberCard(String number) {
-        logger.info("inside methode find by number Card ");
+    public Mono<AccountDto> findByNumberAccount(String number) {
+        logger.info("inside methode find by account ");
         Query query = new Query();
         query.addCriteria(Criteria.where("number").is(number));
         return reactiveMongoTemplate.findOne(query, Account.class).map(AccountUtil::entityToDto);

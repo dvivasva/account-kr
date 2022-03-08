@@ -32,6 +32,15 @@ public class AccountService {
         return iAccountRepository.findAll().map(AccountUtil::entityToDto);
     }
 
+    public Mono<AccountDto> update(
+            final Mono<AccountDto> customerDtoMono, final String id) {
+        return iAccountRepository.findById(id)
+                .flatMap(p -> customerDtoMono.map(AccountUtil::dtoToEntity)
+                        .doOnNext(e -> e.setId(id)))
+                .flatMap(iAccountRepository::save)
+                .map(AccountUtil::entityToDto);
+    }
+
     public Mono<AccountDto> findByNumberAccount(String number) {
         logger.info("inside methode find by account ");
         Query query = new Query();
@@ -39,4 +48,5 @@ public class AccountService {
         return reactiveMongoTemplate.findOne(query, Account.class).map(AccountUtil::entityToDto);
 
     }
+
 }
